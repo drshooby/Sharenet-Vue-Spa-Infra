@@ -5,6 +5,7 @@ import paramiko
 import tarfile
 import io
 
+instance_id = None
 try:
     # Initialize the boto3 client
     ec2_client = boto3.client('ec2', 
@@ -88,5 +89,6 @@ except Exception as e:
     print(e)
 finally:
     # Kill the instance
-    terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
-    print(terminate_response)
+    if instance_id:
+        terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
+        print(terminate_response)
