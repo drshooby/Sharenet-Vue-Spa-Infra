@@ -19,3 +19,17 @@ jobs:
           ref: ${{ github.event.client_payload.ref }}
           path: app
           token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Create Temporary EC2
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_SESSION: ${{ secrets.AWS_SESSION }}
+        run: |
+          cd scripts
+          pip install boto3
+          python ec2/temporary/deploy_tmp_ec2.py
