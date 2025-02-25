@@ -1,22 +1,21 @@
 name: Deploy Infrastructure
 
 on:
-  workflow_dispatch:
-    inputs:
-      ref:
-        description: 'Git ref to deploy from'
-        required: true
-        default: 'main'
-
+  repository_dispatch:
+    types: [deploy]
 jobs:
   receive-event:
     runs-on: ubuntu-24.04
-
     steps:
       - name: Checkout Infra Code
         uses: actions/checkout@v4
-
       - name: Log Received Event
         run: |
-          echo "Received dispatch event with ref: ${{ github.event.inputs.ref }}"
-          echo "Event details: ${{ github.event }}"
+          echo "Received dispatch event with ref: ${{ github.event.client_payload.ref }}"
+      - name: Checkout Application Code
+        uses: actions/checkout@v4
+        with:
+          repository: drshooby/your-application-repo
+          ref: ${{ github.event.client_payload.ref }}
+          path: app
+          token: ${{ secrets.PAT }}
