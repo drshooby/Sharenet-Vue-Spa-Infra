@@ -1,0 +1,22 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to deploy from'
+        required: true
+        default: 'main'
+
+jobs:
+  receive-event:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Infra Code
+        uses: actions/checkout@v4
+
+      - name: Log Received Event
+        run: |
+          echo "Received dispatch event with ref: ${{ github.event.inputs.ref }}"
+          echo "Event details: ${{ github.event }}"
