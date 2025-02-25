@@ -20,7 +20,10 @@ jobs:
           path: app
           token: ${{ secrets.PAT }}
 
-      - run: ls -a
+      - run: |
+          cd app
+          ls -a
+          cd ..
 
       - uses: actions/setup-python@v5
         with:
