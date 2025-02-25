@@ -7,6 +7,9 @@ import io
 
 instance_id = None
 error_occured = False
+
+print("Deploying app to a temporary EC2 instance for smoke tests...")
+
 try:
     # Initialize the boto3 client
     ec2_client = boto3.client('ec2', 
@@ -65,7 +68,7 @@ try:
 
     for attempt in range(max_attempts):
         try:
-            ssh.connect(public_ip, username='ec2-user', pkey=private_key)
+            ssh.connect(public_ip, username='ec2-user', pkey=private_key, timeout=10)
             connected = True
             break
         except Exception as e:
