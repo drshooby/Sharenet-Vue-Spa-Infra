@@ -1,18 +1,15 @@
 import boto3
-import time
-import os
-import sys
 
 # Initialize the boto3 client
 ec2 = boto3.resource('ec2', 
                     region_name='us-east-1',
-                    aws_access_key_id=os.environ['AWS_ACCESS_KEY'],
-                    aws_secret_access_key=os.environ['AWS_SECRET_KEY'], 
-                    aws_session_token=os.environ['AWS_SESSION'])
+                    aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                    aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'], 
+                    aws_session_token=os.environ['AWS_SESSION_TOKEN'])
 
 # Create the EC2 instance
 instance = ec2.create_instances(
-    ImageId='ami-0c55b159cbfafe1f0',  # Amazon Linux 2 AMI (adjust for your region)
+    ImageId='ami-0c55b159cbfafe1f0',  # Amazon Linux 2 AMI
     InstanceType='t2.micro',
     MinCount=1,
     MaxCount=1,
