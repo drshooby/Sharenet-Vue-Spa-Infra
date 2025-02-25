@@ -37,8 +37,11 @@ try:
     instance_id = response['Instances'][0]['InstanceId']
 
     print(f"Waiting for instance {instance_id} to start...")
-    waiter = ec2_client.get_waiter('instance_running')
+
+    waiter = ec2_client.get_waiter('instance_status_ok')
     waiter.wait(InstanceIds=[instance_id])
+
+    print(f"Instance {instance_id} is ready")
 
     describe_response = ec2_client.describe_instances(InstanceIds=[instance_id])
     public_ip = describe_response['Reservations'][0]['Instances'][0].get('PublicIpAddress', 'No public IP')
@@ -74,8 +77,12 @@ try:
     
     app_tarball = create_tarball('app')
 
+    def progress_callback(transferred, total):
+        percentage = (transferred / total) * 100
+        print(f"\rTransferred: {transferred}/{total} bytes ({percentage:.2f}%)", end="")
+
     sftp = ssh.open_sftp()
-    sftp.putfo(app_tarball, 'app.tar.gz')
+    sftp.putfo(app_tarball, 'app.tar.gz', callback=progress_callback)
     sftp.close()
 
     stdin, stdout, stderr = ssh.exec_command('tar -xzf app.tar.gz')
@@ -87,7 +94,7 @@ try:
     print("File transfer complete 🎉")
 
 except Exception as e:
-    print(e + "🚩")
+    print(f"{e} 🚩")
     error_occured = True
 finally:
     # Kill the instance
