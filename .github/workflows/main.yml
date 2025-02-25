@@ -20,11 +20,6 @@ jobs:
           path: app
           token: ${{ secrets.PAT }}
 
-      - run: |
-          cd app
-          ls -a
-          cd ..
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -35,5 +30,6 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_SESSION: ${{ secrets.AWS_SESSION }}
         run: |
+          cd scripts
           pip install boto3
-          python /home/runner/work/Sharenet-Vue-Spa-Infra/Sharenet-Vue-Spa-Infra/scripts/ec2/temporary/deploy_tmp_ec2.py
+          python ec2/temporary/deploy_tmp_ec2.py
