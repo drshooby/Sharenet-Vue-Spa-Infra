@@ -10,7 +10,7 @@ ec2 = boto3.resource('ec2',
 
 # Create the EC2 instance
 instance = ec2.create_instances(
-    ImageId='ami-0f37c4a1ba152af46',  # Amazon Linux 2023, 64-bit ARM
+    ImageId='ami-04681163a08179f28',  # Amazon Linux 2 AMI (64-bit x86)
     InstanceType='t2.micro',
     MinCount=1,
     MaxCount=1,
