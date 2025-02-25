@@ -27,4 +27,4 @@ jobs:
           python-version: '3.13' 
 
       - name: Create Temporary EC2
-        run: python deploy_tmp_ec2.py
+        run: python /home/runner/work/Sharenet-Vue-Spa-Infra/Sharenet-Vue-Spa-Infra/scripts/ec2/temporary/deploy_tmp_ec2.py
