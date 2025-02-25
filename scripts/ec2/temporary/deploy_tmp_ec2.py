@@ -6,6 +6,7 @@ import tarfile
 import io
 
 instance_id = None
+error_occured = False
 try:
     # Initialize the boto3 client
     ec2_client = boto3.client('ec2', 
@@ -87,8 +88,12 @@ try:
 
 except Exception as e:
     print(e + "🚩")
+    error_occured = True
 finally:
     # Kill the instance
     if instance_id:
         terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
         print(terminate_response)
+
+if error_occured:
+    exit(1)
