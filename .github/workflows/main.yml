@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Application Code
         uses: actions/checkout@v4
         with:
-          repository: drshooby/your-application-repo
+          repository: drshooby/Sharenet-Vue-Spa
           ref: ${{ github.event.client_payload.ref }}
           path: app
           token: ${{ secrets.PAT }}
