@@ -31,5 +31,5 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
         run: |
           cd scripts
-          pip install boto3
+          pip install boto3 paramiko
           python ec2/temporary/deploy_tmp_ec2.py
