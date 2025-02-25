@@ -51,50 +51,50 @@ try:
 
     print(f"Instance is running at {public_ip}")
 
-    def create_tarball(source):
-        tar_buffer = io.BytesIO()
-        with tarfile.open(fileobj=tar_buffer, mode='w:gz') as tar:
-            tar.add(source, arcname=os.path.basename(source))
-        tar_buffer.seek(0)
-        return tar_buffer
+    # def create_tarball(source):
+    #     tar_buffer = io.BytesIO()
+    #     with tarfile.open(fileobj=tar_buffer, mode='w:gz') as tar:
+    #         tar.add(source, arcname=os.path.basename(source))
+    #     tar_buffer.seek(0)
+    #     return tar_buffer
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    # ssh = paramiko.SSHClient()
+    # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    max_attempts = 5
-    connected = False
+    # max_attempts = 5
+    # connected = False
 
-    private_key = paramiko.RSAKey.from_private_key(io.StringIO(os.environ['PEM']))
+    # private_key = paramiko.RSAKey.from_private_key(io.StringIO(os.environ['PEM']))
 
-    for attempt in range(max_attempts):
-        try:
-            ssh.connect(public_ip, username='ec2-user', pkey=private_key, timeout=10)
-            connected = True
-            break
-        except Exception as e:
-            print(e)
-            time.sleep(5)
+    # for attempt in range(max_attempts):
+    #     try:
+    #         ssh.connect(public_ip, username='ec2-user', pkey=private_key, timeout=10)
+    #         connected = True
+    #         break
+    #     except Exception as e:
+    #         print(e)
+    #         time.sleep(5)
 
-    if not connected:
-        raise Exception("Could not connect to the instance")
+    # if not connected:
+    #     raise Exception("Could not connect to the instance")
     
-    app_tarball = create_tarball('app')
+    # app_tarball = create_tarball('app')
 
-    def progress_callback(transferred, total):
-        percentage = (transferred / total) * 100
-        print(f"\rTransferred: {transferred}/{total} bytes ({percentage:.2f}%)", end="")
+    # def progress_callback(transferred, total):
+    #     percentage = (transferred / total) * 100
+    #     print(f"\rTransferred: {transferred}/{total} bytes ({percentage:.2f}%)", end="")
 
-    sftp = ssh.open_sftp()
-    sftp.putfo(app_tarball, 'app.tar.gz', callback=progress_callback)
-    sftp.close()
+    # sftp = ssh.open_sftp()
+    # sftp.putfo(app_tarball, 'app.tar.gz', callback=progress_callback)
+    # sftp.close()
 
-    stdin, stdout, stderr = ssh.exec_command('tar -xzf app.tar.gz')
-    print(stdout.read().decode())
-    print(stderr.read().decode())
+    # stdin, stdout, stderr = ssh.exec_command('tar -xzf app.tar.gz')
+    # print(stdout.read().decode())
+    # print(stderr.read().decode())
 
-    ssh.close()
+    # ssh.close()
 
-    print("File transfer complete 🎉")
+    # print("File transfer complete 🎉")
 
 except Exception as e:
     print(f"{e} 🚩")
