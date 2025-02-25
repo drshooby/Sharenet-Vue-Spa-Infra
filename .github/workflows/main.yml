@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: '3.13'
 
-      - run: pip install boto3
-
       - name: Create Temporary EC2
-        run: python /home/runner/work/Sharenet-Vue-Spa-Infra/Sharenet-Vue-Spa-Infra/scripts/ec2/temporary/deploy_tmp_ec2.py
+        run: |
+          pip install boto3
+          python /home/runner/work/Sharenet-Vue-Spa-Infra/Sharenet-Vue-Spa-Infra/scripts/ec2/temporary/deploy_tmp_ec2.py
