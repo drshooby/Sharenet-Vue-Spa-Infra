@@ -1,4 +1,5 @@
 import boto3
+import os
 
 # Initialize the boto3 client
 ec2 = boto3.resource('ec2', 
