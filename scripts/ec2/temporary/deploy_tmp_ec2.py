@@ -86,7 +86,7 @@ try:
     print("File transfer complete 🎉")
 
 except Exception as e:
-    print(e)
+    print(e + "🚩")
 finally:
     # Kill the instance
     if instance_id:
