@@ -27,7 +27,7 @@ try:
                 'Tags': [
                     {
                         'Key': 'Name',
-                        'Value': 'Smoke Test'
+                        'Value': 'Temporary EC2 Instance (Smoke Test)'
                     },
                 ]
             },
