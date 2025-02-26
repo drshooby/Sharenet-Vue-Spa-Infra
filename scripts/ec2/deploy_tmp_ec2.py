@@ -18,6 +18,21 @@ try:
                         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
                         aws_session_token=os.environ['AWS_SESSION_TOKEN'])
 
+    user_data_script = f"""
+    #!/bin/bash
+    echo 'export MYSQL_DATABASE="{os.environ['MYSQL_DATABASE']}"' >> /etc/profile.d/app_env.sh
+    echo 'export MYSQL_PASSWORD="{os.environ['MYSQL_PASSWORD']}"' >> /etc/profile.d/app_env.sh
+    echo 'export MYSQL_ROOT_PASSWORD="{os.environ['MYSQL_ROOT_PASSWORD']}"' >> /etc/profile.d/app_env.sh
+    echo 'export MYSQL_TABLE="{os.environ['MYSQL_TABLE']}"' >> /etc/profile.d/app_env.sh
+    echo 'export MYSQL_USER="{os.environ['MYSQL_USER']}"' >> /etc/profile.d/app_env.sh
+    echo 'export VUE_APP_GOOGLE_MAPS_API_KEY="{os.environ['VUE_APP_GOOGLE_MAPS_API_KEY']}"' >> /etc/profile.d/app_env.sh
+    source /etc/profile.d/app_env.sh
+    chmod +x /etc/profile.d/app_env.sh
+    """
+
+    # Encode the user data script in base64
+    encoded_user_data = base64.b64encode(user_data_script.encode()).decode()
+
     # Create the EC2 instance
     response = ec2_client.run_instances(
         ImageId='ami-0a8694273b1acf491',  # Amazon Linux 2 AMI (64-bit x86) with Docker and Compose
@@ -25,6 +40,7 @@ try:
         MinCount=1,
         MaxCount=1,
         KeyName='vockey',
+        UserData=encoded_user_data,
         TagSpecifications=[
             {
                 'ResourceType': 'instance',
