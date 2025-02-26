@@ -84,7 +84,7 @@ try:
     print(stdout.read().decode())
 
     # Change directory and run docker-compose
-    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker compose up -d')
+    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose up -d')
     print("Docker compose output:")
     print(stdout.read().decode())
 
@@ -94,7 +94,7 @@ try:
     print(stdout.read().decode())
 
     # Kill containers
-    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker compose down')
+    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
     print("Docker compose down output:")
     print(stdout.read().decode())
 
