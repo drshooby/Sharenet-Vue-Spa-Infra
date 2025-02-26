@@ -69,9 +69,12 @@ try:
     app_tarball = create_tarball('app')
 
     def progress_callback(transferred, total):
-        percentage = (transferred / total) * 100
-        print(f"\rTransferred: {transferred}/{total} bytes ({percentage:.2f}%)", end="")
-
+        if total > 0:
+            percentage = (transferred / total) * 100
+            print(f"\rTransferred: {transferred}/{total} bytes ({percentage:.2f}%)", end="", flush=True)
+        else:
+            print("\rTransferred: 0/0 bytes (0%)", end="", flush=True)
+    
     sftp = ssh_client.open_sftp()
     sftp.putfo(app_tarball, 'app.tar.gz', callback=progress_callback)
     sftp.close()
