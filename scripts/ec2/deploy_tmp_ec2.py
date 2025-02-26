@@ -130,7 +130,7 @@ try:
         "venue": "Cape Town"
     }
     
-    stdin, stdout, stderr = ssh_client.exec_command(f'curl -s -X POST {backend_url} -H "Content-Type: application/json" -d \'{json.dumps(workshop_data)}\'')
+    stdin, stdout, stderr = ssh_client.exec_command(f'curl -v -X POST {backend_url} -H "Content-Type: application/json" -d \'{json.dumps(workshop_data)}\'')
     backend_response = stdout.read().decode()
     backend_stderr = stderr.read().decode()
     if backend_stderr:
