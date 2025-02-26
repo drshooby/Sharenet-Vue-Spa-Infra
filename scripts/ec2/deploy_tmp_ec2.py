@@ -20,7 +20,7 @@ try:
 
     # Create the EC2 instance
     response = ec2_client.run_instances(
-        ImageId='ami-04681163a08179f28',  # Amazon Linux 2 AMI (64-bit x86)
+        ImageId='ami-0a8694273b1acf491',  # Amazon Linux 2 AMI (64-bit x86) with Docker and Compose
         InstanceType='t2.micro',
         MinCount=1,
         MaxCount=1,
@@ -72,12 +72,28 @@ try:
     sftp.putfo(app_tarball, 'app.tar.gz')
     sftp.close()
 
-    stdin, stdout, stderr = ssh_client.exec_command('tar -xzf app.tar.gz')
-    print(stdout.read().decode())
-    print(stderr.read().decode())
+    _, _, stderr = ssh_client.exec_command('tar -xzf app.tar.gz')
+    err = stderr.read().decode()
+    if err:
+        raise Exception(f"Failed to extract tarball: {err}")
 
     stdin, stdout, stderr = ssh_client.exec_command('ls -a')
     print("Files on server:")
+    print(stdout.read().decode())
+
+    # Change directory and run docker-compose
+    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker compose up -d')
+    print("Docker compose output:")
+    print(stdout.read().decode())
+
+    # Check if containers are running
+    stdin, stdout, stderr = ssh_client.exec_command('docker ps')
+    print("Running containers:")
+    print(stdout.read().decode())
+
+    # Kill containers
+    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker compose down')
+    print("Docker compose down output:")
     print(stdout.read().decode())
 
     ssh_client.close()
