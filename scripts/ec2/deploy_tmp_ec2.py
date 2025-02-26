@@ -112,7 +112,7 @@ try:
         print("Docker-compose ran successfully")
     
     # Make sure frontend looks good
-    stdin, stdout, stderr = ssh_client.exec_command(f'curl -v http://localhost:8080')
+    stdin, stdout, stderr = ssh_client.exec_command('curl -v http://localhost:8080')
     frontend_html = stdout.read().decode()
     frontend_stderr = stderr.read().decode()
     if frontend_stderr:
@@ -122,7 +122,7 @@ try:
         print(frontend_html[:500])  # Print only a chunk
     
     # Make sure backend performs correctly
-    stdin, stdout, stderr = ssh_client.exec_command(f'curl -v http://localhost:5000/api/bookings -H "Content-Type: application/json" -d '{"workshopId": 1, "date": "2025-02-01", "venue": "Cape Town"}'')
+    stdin, stdout, stderr = ssh_client.exec_command('curl -v http://localhost:5000/api/bookings -H "Content-Type: application/json" -d \'{"workshopId": 1, "date": "2025-02-01", "venue": "Cape Town"}\'')
     backend_response = stdout.read().decode()
     backend_stderr = stderr.read().decode()
     if backend_stderr:
