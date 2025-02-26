@@ -50,13 +50,6 @@ try:
     describe_response = ec2_client.describe_instances(InstanceIds=[instance_id])
     public_ip = describe_response['Reservations'][0]['Instances'][0].get('PublicIpAddress', 'No public IP')
 
-    def create_tarball(source):
-        tar_buffer = io.BytesIO()
-        with tarfile.open(fileobj=tar_buffer, mode='w:gz') as tar:
-            tar.add(source, arcname=os.path.basename(source))
-        tar_buffer.seek(0)
-        return tar_buffer
-
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -66,22 +59,26 @@ try:
 
     print("SSH Connected.")
 
+    def create_tarball(source):
+        tar_buffer = io.BytesIO()
+        with tarfile.open(fileobj=tar_buffer, mode='w:gz') as tar:
+            tar.add(source, arcname=os.path.basename(source))
+        tar_buffer.seek(0)
+        return tar_buffer
+
     app_tarball = create_tarball('app')
 
-    def progress_callback(transferred, total):
-        if total > 0:
-            percentage = (transferred / total) * 100
-            print(f"\rTransferred: {transferred}/{total} bytes ({percentage:.2f}%)", end="", flush=True)
-        else:
-            print("\rTransferred: 0/0 bytes (0%)", end="", flush=True)
-    
     sftp = ssh_client.open_sftp()
-    sftp.putfo(app_tarball, 'app.tar.gz', callback=progress_callback)
+    sftp.putfo(app_tarball, 'app.tar.gz')
     sftp.close()
 
     stdin, stdout, stderr = ssh_client.exec_command('tar -xzf app.tar.gz')
     print(stdout.read().decode())
     print(stderr.read().decode())
+
+    stdin, stdout, stderr = ssh_client.exec_command('ls -a')
+    print("Files on server:")
+    print(stdout.read().decode())
 
     ssh_client.close()
 
