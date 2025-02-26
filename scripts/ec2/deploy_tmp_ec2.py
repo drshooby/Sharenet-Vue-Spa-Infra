@@ -103,15 +103,23 @@ try:
 
     # Change directory and run docker-compose
     stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose up -d')
-    print("Docker compose output:")
-    print(stdout.read().decode())
-
+    docker_stdout = stdout.read().decode()
+    docker_stderr = stderr.read().decode()
+    if docker_stderr:
+        print(f"Docker-compose error: {docker_stderr}")
+    else:
+        print("Docker-compose ran successfully")
+    
     # Make sure frontend looks good
     frontend_url = "http://localhost:8080"  # Change this to the actual frontend URL
     stdin, stdout, stderr = ssh_client.exec_command(f'curl -s {frontend_url}')
     frontend_html = stdout.read().decode()
-    print("Frontend HTML content:")
-    print(frontend_html[:500])  # Print only a chunk
+    frontend_stderr = stderr.read().decode()
+    if frontend_stderr:
+        print(f"Frontend curl error: {frontend_stderr}")
+    else:
+        print("Frontend HTML content:")
+        print(frontend_html[:500])  # Print only a chunk
     
     # Make sure backend performs correctly
     backend_url = "http://localhost:5000/api/bookings"  # Update if needed
@@ -120,16 +128,23 @@ try:
         "date": "2025-02-01",
         "venue": "Cape Town"
     }
-
+    
     stdin, stdout, stderr = ssh_client.exec_command(f'curl -s -X POST {backend_url} -H "Content-Type: application/json" -d \'{json.dumps(workshop_data)}\'')
     backend_response = stdout.read().decode()
-    print("Backend API response:")
-    print(backend_response)
-
+    backend_stderr = stderr.read().decode()
+    if backend_stderr:
+        print(f"Backend curl error: {backend_stderr}")
+    else:
+        print("Backend API response:")
+        print(backend_response)
+    
     # Kill containers
     stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
-    print("Docker compose down output:")
-    print(stdout.read().decode())
+    docker_down_stderr = stderr.read().decode()
+    if docker_down_stderr:
+        print(f"Docker-compose down error: {docker_down_stderr}")
+    else:
+        print("Docker-compose down ran successfully")
 
     ssh_client.close()
 
