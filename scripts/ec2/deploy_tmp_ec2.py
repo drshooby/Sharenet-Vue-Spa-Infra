@@ -105,10 +105,25 @@ try:
     print("Docker compose output:")
     print(stdout.read().decode())
 
-    # Check if containers are running
-    stdin, stdout, stderr = ssh_client.exec_command('docker ps')
-    print("Running containers:")
-    print(stdout.read().decode())
+    # Make sure frontend looks good
+    frontend_url = "http://localhost:8080"  # Change this to the actual frontend URL
+    stdin, stdout, stderr = ssh_client.exec_command(f'curl -s {frontend_url}')
+    frontend_html = stdout.read().decode()
+    print("Frontend HTML content:")
+    print(frontend_html[:500])  # Print only a chunk
+    
+    # Make sure backend performs correctly
+    backend_url = "http://localhost:5000/api/bookings"  # Update if needed
+    workshop_data = {
+        "workshopId": 1,
+        "date": "2025-02-01",
+        "venue": "Cape Town"
+    }
+
+    stdin, stdout, stderr = ssh_client.exec_command(f'curl -s -X POST {backend_url} -H "Content-Type: application/json" -d \'{json.dumps(workshop_data)}\'')
+    backend_response = stdout.read().decode()
+    print("Backend API response:")
+    print(backend_response)
 
     # Kill containers
     stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
