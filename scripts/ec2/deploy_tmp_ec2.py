@@ -77,6 +77,8 @@ try:
     if err:
         raise Exception(f"Failed to extract tarball: {err}")
 
+    print("File transfer complete 🎉")
+
     stdin, stdout, stderr = ssh_client.exec_command('ls -a')
     print("Files on server:")
     print(stdout.read().decode())
@@ -98,17 +100,15 @@ try:
 
     ssh_client.close()
 
-    print("File transfer complete 🎉")
-
 except Exception as e:
     print(f"{e} 🚩")
     error_occurred = True
 finally:
     # Kill the instance
     print("done")
-    if instance_id:
-        terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
-        print(terminate_response)
+    # if instance_id:
+    #     terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
+    #     print(terminate_response)
 
 if error_occurred:
     exit(1)
