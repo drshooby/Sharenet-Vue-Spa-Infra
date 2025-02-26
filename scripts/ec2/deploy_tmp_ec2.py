@@ -3,6 +3,7 @@ import os
 import paramiko
 import tarfile
 import io
+import base64
 
 instance_id = None
 error_occurred = False
