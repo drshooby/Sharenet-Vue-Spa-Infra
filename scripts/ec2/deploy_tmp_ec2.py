@@ -153,10 +153,11 @@ except Exception as e:
     print(f"{e} 🚩")
     error_occurred = True
 finally:
+    print("done")
     # Kill the instance
-    if instance_id:
-        terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
-        print(terminate_response)
+    # if instance_id:
+    #     terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
+    #     print(terminate_response)
 
 if error_occurred:
     exit(1)
