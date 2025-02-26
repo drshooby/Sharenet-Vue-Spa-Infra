@@ -60,7 +60,7 @@ try:
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    private_key_str = os.getenv("PEM_KEY", "").replace("\\n", "\n")
+    private_key_str = os.environ["PEM"].replace("\\n", "\n")
     pkey = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
     ssh_client.connect(public_ip, username="ec2-user", pkey=pkey, look_for_keys=False)
 
