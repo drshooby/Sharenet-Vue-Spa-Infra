@@ -9,6 +9,7 @@ jobs:
     steps:
       - name: Checkout Infra Code
         uses: actions/checkout@v4
+        
       - name: Checkout Application Code
         uses: actions/checkout@v4
         with:
