@@ -103,21 +103,14 @@ try:
     print(stdout.read().decode())
 
     # Change directory and run docker-compose
-    _, stdout, _ = ssh_client.exec_command('cd app && docker compose up -d')
-    docker_stdout = stdout.read().decode()
-    docker_stderr = stderr.read().decode()
-    if docker_stderr:
-        print(f"Docker-compose error: {docker_stderr}")
-    else:
-        print("Docker-compose ran successfully")
-    
-    print("Running Tests")
-    stdin, stdout, stderr = ssh_client.exec_command('docker exec app-backend-1 npm test')
-    print(stdout.read().decode())
-    if stderr.read().decode():
-        raise Exception("Tests ran into a problem!")
+    _, docker_out, docker_err = ssh_client.exec_command('cd app && docker compose up -d && docker exec app-backend-1 npm test')
+    docker_stdout = docker_out.read().decode()
+    docker_stderr = docker_err.read().decode()
 
-    print("SMOKE TESTS PASS✨")
+    if "PASS" in docker_stdout:
+        print("SMOKE TESTS PASS✨")
+    else:
+        raise Exception("Tests had problems!", docker_stderr)
     
     # Kill containers
     _, stdout, stderr = ssh_client.exec_command('cd app && docker compose down')
@@ -133,10 +126,10 @@ except Exception as e:
     print(f"{e} 🚩")
     error_occurred = True
 finally:
-    # Kill the instance
-    # if instance_id:
-    #     terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
-    #     print(terminate_response)
+    #Kill the instance
+    if instance_id:
+        terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
+        print(terminate_response)
     print("done")
 
 if error_occurred:
