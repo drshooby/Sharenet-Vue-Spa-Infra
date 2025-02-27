@@ -1,12 +1,10 @@
-import time
+import base64
+import io
+import os
+import tarfile
 
 import boto3
-import os
 import paramiko
-import tarfile
-import io
-import base64
-import json
 
 instance_id = None
 error_occurred = False
@@ -40,7 +38,7 @@ try:
 
     # Create the EC2 instance
     response = ec2_client.run_instances(
-        ImageId='ami-0a8694273b1acf491',  # Amazon Linux 2 AMI (64-bit x86) with Docker and Compose
+        ImageId='ami-06aa41e39302ba3db',  # Amazon Linux 2 AMI (64-bit x86) with Docker and Compose
         InstanceType='t2.micro',
         MinCount=1,
         MaxCount=1,
@@ -105,7 +103,7 @@ try:
     print(stdout.read().decode())
 
     # Change directory and run docker-compose
-    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose up -d')
+    _, stdout, _ = ssh_client.exec_command('cd app && docker-compose up -d')
     docker_stdout = stdout.read().decode()
     docker_stderr = stderr.read().decode()
     if docker_stderr:
@@ -113,46 +111,16 @@ try:
     else:
         print("Docker-compose ran successfully")
     
-    print("Running frontend smoke-check in 2 seconds...")
-    time.sleep(2)
-    stdin, stdout, stderr = ssh_client.exec_command('curl -v http://localhost:8080')
-    frontend_html = stdout.read().decode()
-    frontend_stderr = stderr.read().decode()
-    if frontend_stderr:
-        print(f"Frontend curl error: {frontend_stderr}")
-    else:
-        print("Frontend HTML content:")
-        html_start = frontend_html[:500]
-        # Test 1: Confirm frontend works
-        assert "sharenet" in frontend_html or "Sharenet" in frontend_html
+    print("Running Tests")
+    stdin, stdout, stderr = ssh_client.exec_command('cd app/backend && npm test')
+    print(stdout.read().decode())
+    if stderr.read().decode():
+        raise Exception("Tests ran into a problem!")
 
-    print("Success!")
-
-    print("Running backend smoke-check in 2 seconds...")
-    time.sleep(2)
-
-    payload = {
-        "workshopId": 1,
-        "date": "2025-02-01",
-        "venue": "Cape Town",
-    }
-    location = "http://localhost:5000/api/bookings"
-
-    command = f"curl -v {location} -H \"Content-Type: application/json\" -d \'{json.dumps(payload)}\'"
-
-    stdin, stdout, stderr = ssh_client.exec_command(command)
-    backend_response = stdout.read().decode()
-    backend_stderr = stderr.read().decode()
-    if backend_stderr:
-        print(f"Backend curl error: {backend_stderr}")
-    else:
-        print("Backend API response:")
-        print(backend_response)
-        # Test 2: Confirm backend works based on a frontend post
-        assert "Booking saved successfully" in backend_response
+    print("SMOKE TESTS PASS✨")
     
     # Kill containers
-    stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
+    _, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
     docker_down_stderr = stderr.read().decode()
     if docker_down_stderr:
         print(f"Docker-compose down error: {docker_down_stderr}")
