@@ -58,11 +58,28 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
       
-      - name: Build, tag, and push docker image to Amazon ECR
+      - name: Send Frontend Docker Image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: my-ecr-repo
-          IMAGE_TAG: ${{ github.sha }}
+          REPOSITORY_FRONTEND: my-ecr-repo/frontend
+          IMAGE_TAG: nightly-$(date +'%Y-%m-%d')
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          cd app/frontend
+          docker build -t $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG .
+          
+          docker tag $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG $REGISTRY/$REPOSITORY_FRONTEND:latest
+          docker push $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY_FRONTEND:latest
+      
+      - name: Send Backend Docker Image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY_BACKEND: my-ecr-repo/backend
+          IMAGE_TAG: nightly-$(date +'%Y-%m-%d')
+        run: |
+          cd app/backend
+          docker build -t $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG .
+          
+          docker tag $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG $REGISTRY/$REPOSITORY_BACKEND:latest
+          docker push $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY_BACKEND:latest
