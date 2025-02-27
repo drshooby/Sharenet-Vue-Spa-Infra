@@ -103,7 +103,7 @@ try:
     print(stdout.read().decode())
 
     # Change directory and run docker-compose
-    _, stdout, _ = ssh_client.exec_command('cd app && docker-compose up -d')
+    _, stdout, _ = ssh_client.exec_command('cd app && docker compose up -d')
     docker_stdout = stdout.read().decode()
     docker_stderr = stderr.read().decode()
     if docker_stderr:
@@ -112,7 +112,7 @@ try:
         print("Docker-compose ran successfully")
     
     print("Running Tests")
-    stdin, stdout, stderr = ssh_client.exec_command('cd app/backend && npm test')
+    stdin, stdout, stderr = ssh_client.exec_command('docker exec app-backend-1 npm test')
     print(stdout.read().decode())
     if stderr.read().decode():
         raise Exception("Tests ran into a problem!")
@@ -120,7 +120,7 @@ try:
     print("SMOKE TESTS PASS✨")
     
     # Kill containers
-    _, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
+    _, stdout, stderr = ssh_client.exec_command('cd app && docker compose down')
     docker_down_stderr = stderr.read().decode()
     if docker_down_stderr:
         print(f"Docker-compose down error: {docker_down_stderr}")
