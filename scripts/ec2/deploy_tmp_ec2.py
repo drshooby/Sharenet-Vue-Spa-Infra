@@ -134,9 +134,10 @@ except Exception as e:
     error_occurred = True
 finally:
     # Kill the instance
-    if instance_id:
-        terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
-        print(terminate_response)
+    # if instance_id:
+    #     terminate_response = ec2_client.terminate_instances(InstanceIds=[instance_id])
+    #     print(terminate_response)
+    print("done")
 
 if error_occurred:
     exit(1)
