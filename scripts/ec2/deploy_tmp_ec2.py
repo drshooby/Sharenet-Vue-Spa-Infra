@@ -34,6 +34,7 @@ try:
     """
 
     # Encode the user data script in base64
+    # This is an option in AWS when entering the script manually online so add it here
     encoded_user_data = base64.b64encode(user_data_script.encode()).decode()
 
     # Create the EC2 instance
