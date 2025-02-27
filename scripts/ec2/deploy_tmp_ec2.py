@@ -107,7 +107,8 @@ try:
     docker_stdout = docker_out.read().decode()
     docker_stderr = docker_err.read().decode()
 
-    if "PASS" in docker_stdout:
+    # Paramiko has this weird thing where docker warnings count as errors, so check both to be sure
+    if "PASS" in docker_stderr or "PASS" in docker_stdout:
         print("SMOKE TESTS PASS✨")
     else:
         raise Exception("Tests had problems!", docker_stderr)
