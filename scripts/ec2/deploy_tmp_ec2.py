@@ -1,3 +1,5 @@
+import time
+
 import boto3
 import os
 import paramiko
@@ -111,7 +113,8 @@ try:
     else:
         print("Docker-compose ran successfully")
     
-    # Make sure frontend looks good
+    print("Running frontend smoke-check in 2 seconds...")
+    time.sleep(2)
     stdin, stdout, stderr = ssh_client.exec_command('curl -v http://localhost:8080')
     frontend_html = stdout.read().decode()
     frontend_stderr = stderr.read().decode()
@@ -119,10 +122,25 @@ try:
         print(f"Frontend curl error: {frontend_stderr}")
     else:
         print("Frontend HTML content:")
-        print(frontend_html[:500])  # Print only a chunk
-    
-    # Make sure backend performs correctly
-    stdin, stdout, stderr = ssh_client.exec_command('curl -v http://localhost:5000/api/bookings -H "Content-Type: application/json" -d "{\\"workshopId\\": 1, \\"date\\": \\"2025-02-01\\", \\"venue\\": \\"Cape Town\\"}"')
+        html_start = frontend_html[:500]
+        # Test 1: Confirm frontend works
+        assert "sharenet" in frontend_html or "Sharenet" in frontend_html
+
+    print("Success!")
+
+    print("Running backend smoke-check in 2 seconds...")
+    time.sleep(2)
+
+    payload = {
+        "workshopId": 1,
+        "date": "2025-02-01",
+        "venue": "Cape Town",
+    }
+    location = "http://localhost:5000/api/bookings"
+
+    command = f"curl -v {location} -H \"Content-Type: application/json\" -d \'{json.dumps(payload)}\'"
+
+    stdin, stdout, stderr = ssh_client.exec_command(command)
     backend_response = stdout.read().decode()
     backend_stderr = stderr.read().decode()
     if backend_stderr:
@@ -130,6 +148,8 @@ try:
     else:
         print("Backend API response:")
         print(backend_response)
+        # Test 2: Confirm backend works based on a frontend post
+        assert "Booking saved successfully" in backend_response
     
     # Kill containers
     stdin, stdout, stderr = ssh_client.exec_command('cd app && docker-compose down')
