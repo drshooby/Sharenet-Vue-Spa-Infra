@@ -45,6 +45,7 @@ jobs:
           cd app/backend
           echo "tests/" > .dockerignore
           ls -a
-          cat .dockerignore
 
+      - name: Upload to ECR
+      # Figure this out
       
