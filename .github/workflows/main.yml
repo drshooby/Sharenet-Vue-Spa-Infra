@@ -4,14 +4,11 @@ on:
   repository_dispatch:
     types: [deploy]
 jobs:
-  receive-event:
+  smoke-tests:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Infra Code
         uses: actions/checkout@v4
-      - name: Log Received Event
-        run: |
-          echo "Received dispatch event with ref: ${{ github.event.client_payload.ref }}"
       - name: Checkout Application Code
         uses: actions/checkout@v4
         with:
