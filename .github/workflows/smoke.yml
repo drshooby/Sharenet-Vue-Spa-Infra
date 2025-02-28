@@ -18,27 +18,27 @@ jobs:
           path: app
           token: ${{ secrets.PAT }}
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.13'
 
-      - name: Install Dependencies
-        run: pip install boto3 paramiko
+      # - name: Install Dependencies
+      #   run: pip install boto3 paramiko
       
-      - name: Create Temporary EC2
-        env:
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_TABLE: ${{ secrets.MYSQL_TABLE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          VUE_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.VUE_APP_GOOGLE_MAPS_API_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-          PEM: ${{ secrets.PEM }}
-        run: python scripts/ec2/deploy_tmp_ec2.py
+      # - name: Create Temporary EC2
+      #   env:
+      #     MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      #     MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      #     MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      #     MYSQL_TABLE: ${{ secrets.MYSQL_TABLE }}
+      #     MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      #     MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      #     VUE_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.VUE_APP_GOOGLE_MAPS_API_KEY }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      #     PEM: ${{ secrets.PEM }}
+      #   run: python scripts/ec2/deploy_tmp_ec2.py
 
       - name: Add Dockerignore Before ECR Upload
         run: |
