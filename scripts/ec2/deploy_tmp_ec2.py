@@ -87,6 +87,7 @@ try:
         tar_buffer.seek(0)
         return tar_buffer
 
+    # Tarball since it makes more sense to package up the code and do a little compression prior to sending for speed
     app_tarball = create_tarball('app')
 
     sftp = ssh_client.open_sftp()
