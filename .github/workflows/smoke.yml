@@ -59,7 +59,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
       
-      - name: Send Docker Images to Amazon ECR
+      - name: Send Docker Images to Amazon ECR in Parallel
         run: |
           docker build -t $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG app/frontend &
           docker build -t $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG app/backend &
