@@ -1,3 +1,5 @@
+name: Deploy Latest
+
 on:
   workflow_run:
     workflows: ["Smoke Tests and ECR Upload"]
