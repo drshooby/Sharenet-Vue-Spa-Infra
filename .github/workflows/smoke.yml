@@ -59,28 +59,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
       
-      - name: Send Frontend Docker Image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY_FRONTEND: sharenet_vue_spa/frontend
-          IMAGE_TAG: nightly-$(date +'%Y-%m-%d')
+      - name: Send Docker Images to Amazon ECR
         run: |
-          cd app/frontend
-          docker build -t $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG .
+          docker build -t $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG app/frontend &
+          docker build -t $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG app/backend &
+          wait
           
-          docker tag $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG $REGISTRY/$REPOSITORY_FRONTEND:latest
-          docker push $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY_FRONTEND:latest
-      
-      - name: Send Backend Docker Image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY_BACKEND: sharenet_vue_spa/backend
-          IMAGE_TAG: nightly-$(date +'%Y-%m-%d')
-        run: |
-          cd app/backend
-          docker build -t $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG .
-          
-          docker tag $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG $REGISTRY/$REPOSITORY_BACKEND:latest
-          docker push $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY_BACKEND:latest
+          docker push $REGISTRY/$REPOSITORY_FRONTEND:$IMAGE_TAG &
+          docker push $REGISTRY/$REPOSITORY_FRONTEND:latest &
+          docker push $REGISTRY/$REPOSITORY_BACKEND:$IMAGE_TAG &
+          docker push $REGISTRY/$REPOSITORY_BACKEND:latest &
+          wait
