@@ -20,6 +20,7 @@ try:
                         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
                         aws_session_token=os.environ['AWS_SESSION_TOKEN'])
 
+    # This sets the environment vars in the EC2 machine for the tests
     user_data_script = f"""
     #!/bin/bash
     echo 'export MYSQL_DATABASE="{os.environ['MYSQL_DATABASE']}"' >> /etc/profile.d/app_env.sh
