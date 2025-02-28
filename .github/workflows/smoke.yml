@@ -46,7 +46,6 @@ jobs:
           echo "tests/" > .dockerignore
           ls -a
 
-      ### THESE NEED TO BE SET UP
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
@@ -70,9 +69,8 @@ jobs:
           docker build -t $REGISTRY/sharenet_vue_spa/backend:$IMAGE_TAG app/backend &
           wait
           
-          docker tag $REGISTRY/sharenet_vue_spa/frontend:$IMAGE_TAG $REGISTRY/sharenet_vue_spa/frontend:latest &
-          docker tag $REGISTRY/sharenet_vue_spa/backend:$IMAGE_TAG $REGISTRY/sharenet_vue_spa/backend:latest &
-          wait
+          docker tag $REGISTRY/sharenet_vue_spa/frontend:$IMAGE_TAG $REGISTRY/sharenet_vue_spa/frontend:latest
+          docker tag $REGISTRY/sharenet_vue_spa/backend:$IMAGE_TAG $REGISTRY/sharenet_vue_spa/backend:latest
           
           docker push $REGISTRY/sharenet_vue_spa/frontend:$IMAGE_TAG &
           docker push $REGISTRY/sharenet_vue_spa/frontend:latest &
