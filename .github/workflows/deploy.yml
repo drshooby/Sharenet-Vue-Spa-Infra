@@ -1,1 +1,5 @@
-
+on:
+  workflow_run:
+    workflows: ["Smoke Tests and ECR Upload"]
+    types:
+      - completed
