@@ -52,6 +52,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -61,7 +62,7 @@ jobs:
       - name: Send Frontend Docker Image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY_FRONTEND: my-ecr-repo/frontend
+          REPOSITORY_FRONTEND: sharenet_vue_spa/frontend
           IMAGE_TAG: nightly-$(date +'%Y-%m-%d')
         run: |
           cd app/frontend
@@ -74,7 +75,7 @@ jobs:
       - name: Send Backend Docker Image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY_BACKEND: my-ecr-repo/backend
+          REPOSITORY_BACKEND: sharenet_vue_spa/backend
           IMAGE_TAG: nightly-$(date +'%Y-%m-%d')
         run: |
           cd app/backend
