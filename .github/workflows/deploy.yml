@@ -15,14 +15,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-        
+
       - name: Install Dependencies
         run: pip install boto3 paramiko
       
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.1.0
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
+      - name: Create Temporary EC2
+        env:
+          
+          
+        run: python scripts/ec2/deploy_tmp_ec2.py
+      
