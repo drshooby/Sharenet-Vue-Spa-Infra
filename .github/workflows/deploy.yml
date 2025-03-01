@@ -8,7 +8,7 @@ on:
       - completed
 
 jobs:
-  Pull_from_ECR:
+  pull_from_ecr:
     runs-on: ubuntu-24.04
     
     steps:
