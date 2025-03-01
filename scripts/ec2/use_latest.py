@@ -1,72 +1,46 @@
-import io
+import boto3
 import os
 
-import boto3
-import paramiko
-
 try:
-    # Initialize the boto3 client
-    ec2_client = boto3.client('ec2',
-                        region_name='us-east-1',
-                        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-                        aws_session_token=os.environ['AWS_SESSION_TOKEN'])
+    AWS_REGION = "us-east-1"
 
-    instance_id = None
+    ssm_client = boto3.client("ssm", region_name=AWS_REGION)
+    sts_client = boto3.client("sts", region_name=AWS_REGION)
 
-    describe_response = ec2_client.describe_instances(InstanceIds=[instance_id])
+    AWS_ACCOUNT_ID = sts_client.get_caller_identity()["Account"]
 
-    public_ip = describe_response['Reservations'][0]['Instances'][0].get('PublicIpAddress', None)
-    if not public_ip:
-        error_occurred = True
-        raise Exception("No public IP address for instance", instance_id)
+    ECR_REPO_FRONTEND = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/sharenet_vue_spa_frontend:latest"
+    ECR_REPO_BACKEND = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/sharenet_vue_spa_backend:latest"
 
-    ssh_client = paramiko.SSHClient()
-    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    commands = [
+        f"aws ecr get-login-password --region {AWS_REGION} | docker login --username AWS --password-stdin {AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com",
 
-    private_key_str = os.environ["PEM"].replace("\\n", "\n")
-    pkey = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
-    ssh_client.connect(public_ip, username="ec2-user", pkey=pkey, look_for_keys=False)
+        # Pull the latest
+        f"docker pull {ECR_REPO_FRONTEND}",
+        f"docker pull {ECR_REPO_BACKEND}",
 
-    print("SSH Connected.")
+        # Kill old, bring up new
+        "docker stop frontend backend || true",
+        "docker rm -f frontend backend || true",
 
-    ecr_login_cmd = "aws ecr get-login-password --region us-east-1"
+        f"docker run -d --name frontend -p 8080:8080 {ECR_REPO_FRONTEND}",
+        f"docker run -d --name backend -p 5000:5000 {ECR_REPO_BACKEND}",
 
-    _, ecr_stdout, ecr_stderr = ssh_client.exec_command(ecr_login_cmd)
-    err = ecr_stderr.read().decode()
-    if err:
-        raise Exception(f"ECR login failed: {err}")
+        "docker ps -a"
+    ]
 
-    ecr_credentials = ecr_stdout.read().decode().strip()
+    response = ssm_client.send_command(
+        InstanceIds=[os.environ['INSTANCE_ID']],
+        DocumentName="AWS-RunShellScript",
+        Parameters={"commands": commands},
+    )
 
-    docker_login_cmd = f"echo {ecr_credentials} | docker login --username AWS --password-stdin {describe_response['Reservations'][0]['Instances'][0]['ImageId']}.dkr.ecr.us-east-1.amazonaws.com"
-
-    _, _, docker_stderr = ssh_client.exec_command(docker_login_cmd)
-    err = docker_stderr.read().decode()
-    if err:
-        raise Exception(f"Docker login failed: {err}")
-
-    frontend_repo = "sharenet_vue_spa/frontend"
-    backend_repo = "sharenet_vue_spa/backend"
-
-    frontend_image_uri = f"{describe_response['Reservations'][0]['Instances'][0]['ImageId']}.dkr.ecr.us-east-1.amazonaws.com/{frontend_repo}:latest"
-    backend_image_uri = f"{describe_response['Reservations'][0]['Instances'][0]['ImageId']}.dkr.ecr.us-east-1.amazonaws.com/{backend_repo}:latest"
-
-    pull_frontend_cmd = f"docker pull {frontend_image_uri}"
-    pull_backend_cmd = f"docker pull {backend_image_uri}"
-
-    _, _, pull_stderr = ssh_client.exec_command(pull_frontend_cmd)
-    err = pull_stderr.read().decode()
-    if err:
-        raise Exception(f"Pull frontend failed: {err}")
-
-    _, _, pull_stderr = ssh_client.exec_command(pull_backend_cmd)
-    err = pull_stderr.read().decode()
-    if err:
-        raise Exception(f"Pull backend failed: {err}")
-
-    print("LATEST IMAGE PULLED SUCCESSFULLY ✨")
+    print(response)
+    print(f"Deployment initiated! 💎")
 
 except Exception as e:
     print(f"{e} 🚩")
     exit(1)
+
+finally:
+    print(f"done")
