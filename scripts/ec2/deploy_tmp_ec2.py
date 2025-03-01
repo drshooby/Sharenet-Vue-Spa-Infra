@@ -69,7 +69,10 @@ try:
     print(f"Instance {instance_id} is ready")
 
     describe_response = ec2_client.describe_instances(InstanceIds=[instance_id])
-    public_ip = describe_response['Reservations'][0]['Instances'][0].get('PublicIpAddress', 'No public IP')
+    public_ip = describe_response['Reservations'][0]['Instances'][0].get('PublicIpAddress', None)
+    if not public_ip:
+        error_occurred = True
+        raise Exception("No public IP address for instance", instance_id)
 
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -112,7 +115,7 @@ try:
 
     # Paramiko has this weird thing where docker warnings count as errors, so check both to be sure
     if "PASS" in docker_stderr or "PASS" in docker_stdout:
-        print("SMOKE TESTS PASS✨")
+        print("SMOKE TESTS PASS ✨")
     else:
         raise Exception("Tests had problems!", docker_stderr)
     
