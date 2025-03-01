@@ -9,6 +9,7 @@ on:
 
 jobs:
   Pull_from_ECR:
-    uses: ubuntu24-04
+    uses: ubuntu-24.04
+    
     
   
