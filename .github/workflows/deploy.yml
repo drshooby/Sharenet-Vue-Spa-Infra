@@ -17,11 +17,10 @@ jobs:
           python-version: '3.13'
 
       - name: Install Dependencies
-        run: pip install boto3 paramiko
+        run: pip install boto3
       
-      - name: Create Temporary EC2
+      - name: Pull Latest
         env:
-          
-          
-        run: python scripts/ec2/deploy_tmp_ec2.py
+          INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
+        run: python scripts/ec2/use_latest.py
       
