@@ -9,7 +9,16 @@ on:
 
 jobs:
   Pull_from_ECR:
-    uses: ubuntu-24.04
+    runs-on: ubuntu-24.04
     
-    
+    steps:
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        
+      name: Install Dependencies
+        run: pip install boto3 paramiko
+      
+      name: Pull Latest Image Into EC2
+        env:
   
