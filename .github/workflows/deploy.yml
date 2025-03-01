@@ -1,7 +1,11 @@
 name: Deploy Latest
 
 on:
+### TODO!!!! MAKE THIS CHRON
   workflow_run:
     workflows: ["Smoke Tests and ECR Upload"]
     types:
       - completed
+
+
+  
