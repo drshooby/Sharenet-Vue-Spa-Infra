@@ -4,8 +4,21 @@ import os
 try:
     AWS_REGION = "us-east-1"
 
-    ssm_client = boto3.client("ssm", region_name=AWS_REGION)
-    sts_client = boto3.client("sts", region_name=AWS_REGION)
+    ssm_client = boto3.client(
+        "ssm",
+        region_name=AWS_REGION,
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        aws_session_token=os.environ["AWS_SESSION_TOKEN"]
+    )
+
+    sts_client = boto3.client(
+        "sts",
+        region_name=AWS_REGION,
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        aws_session_token=os.environ["AWS_SESSION_TOKEN"]
+    )
 
     AWS_ACCOUNT_ID = sts_client.get_caller_identity()["Account"]
 
