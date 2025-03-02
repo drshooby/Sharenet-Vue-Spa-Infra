@@ -32,5 +32,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
-        run: python ../scripts/ec2/use_latest.py
+        run: |
+          cd ..
+          python scripts/ec2/use_latest.py
       
