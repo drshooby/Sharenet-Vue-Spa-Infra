@@ -1,6 +1,8 @@
 import boto3
 import os
 
+print("Deploying app with latest images...")
+
 try:
     AWS_REGION = "us-east-1"
 
