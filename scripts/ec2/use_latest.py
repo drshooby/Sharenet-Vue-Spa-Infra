@@ -33,6 +33,8 @@ try:
     MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
     MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
     MYSQL_TABLE = os.environ["MYSQL_TABLE"]
+    API_URL = os.environ["API_URL"]
+    ALLOWED_ORIGINS = os.environ["ALLOWED_ORIGINS"]
 
     # Frontend var
     VUE_APP_GOOGLE_MAPS_API_KEY = os.environ["VUE_APP_GOOGLE_MAPS_API_KEY"]
@@ -53,12 +55,12 @@ try:
         # Bring up new backend container
         f"docker run -d --name backend -p 5000:5000 "
         f"-e MYSQL_HOST={MYSQL_HOST} -e MYSQL_USER={MYSQL_USER} -e MYSQL_PASSWORD={MYSQL_PASSWORD} "
-        f"-e MYSQL_DATABASE={MYSQL_DATABASE} -e MYSQL_TABLE={MYSQL_TABLE} "
+        f"-e MYSQL_DATABASE={MYSQL_DATABASE} -e MYSQL_TABLE={MYSQL_TABLE} -e ALLOWED_ORIGINS={ALLOWED_ORIGINS} "
         f"{ECR_REPO_BACKEND}",
 
         # Bring up new frontend container
         f"docker run -d --name frontend -p 8080:8080 "
-        f"-e VUE_APP_GOOGLE_MAPS_API_KEY={VUE_APP_GOOGLE_MAPS_API_KEY} "
+        f"-e VUE_APP_GOOGLE_MAPS_API_KEY={VUE_APP_GOOGLE_MAPS_API_KEY} -e API_URL={API_URL} "
         f"{ECR_REPO_FRONTEND}",
 
         # Cleanup

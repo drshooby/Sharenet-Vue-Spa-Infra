@@ -30,6 +30,8 @@ try:
     echo 'export MYSQL_USER="{os.environ['MYSQL_USER']}"' >> /etc/profile.d/app_env.sh
     echo 'export MYSQL_HOST="{os.environ['MYSQL_HOST']}"' >> /etc/profile.d/app_env.sh
     echo 'export VUE_APP_GOOGLE_MAPS_API_KEY="{os.environ['VUE_APP_GOOGLE_MAPS_API_KEY']}"' >> /etc/profile.d/app_env.sh
+    echo 'export API_URL="{os.environ['API_URL']}"' >> /etc/profile.d/app_env.sh
+    echo 'export ALLOWED_ORIGINS="{os.environ['ALLOWED_ORIGINS']}"' >> /etc/profile.d/app_env.sh
     source /etc/profile.d/app_env.sh
     chmod +x /etc/profile.d/app_env.sh
     """
