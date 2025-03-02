@@ -63,7 +63,7 @@ try:
     ]
 
     response = ssm_client.send_command(
-        InstanceIds=[os.environ['INSTANCE_ID']],
+        InstanceIds=[os.environ["INSTANCE_ID"]],
         DocumentName="AWS-RunShellScript",
         Parameters={"commands": commands},
     )
