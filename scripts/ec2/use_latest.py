@@ -24,8 +24,8 @@ try:
 
     AWS_ACCOUNT_ID = sts_client.get_caller_identity()["Account"]
 
-    ECR_REPO_BACKEND = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/sharenet_vue_spa_backend:latest"
-    ECR_REPO_FRONTEND = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/sharenet_vue_spa_frontend:latest"
+    ECR_REPO_BACKEND = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/sharenet_vue_spa/backend:latest"
+    ECR_REPO_FRONTEND = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/sharenet_vue_spa/frontend:latest"
 
     # Backend vars
     MYSQL_HOST = os.environ["MYSQL_HOST"]
@@ -75,6 +75,7 @@ try:
 
     command_id = response['Command']['CommandId']
 
+    # Wait for commands to do their thing or this all breaks
     waiter.wait(
         CommandId=command_id,
         InstanceId=INSTANCE_ID
