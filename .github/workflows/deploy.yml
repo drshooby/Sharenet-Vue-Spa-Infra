@@ -19,6 +19,8 @@ jobs:
 
       - name: Install Dependencies
         run: pip install boto3
+
+      - run: pwd
       
       - name: Pull Latest and Run New Code
         env:
