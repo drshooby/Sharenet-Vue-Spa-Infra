@@ -21,6 +21,15 @@ jobs:
       
       - name: Pull Latest and Run New Code
         env:
+          MYSQL_DATABASE: ${{ secrets.PROD_MYSQL_DATABASE }}
+          MYSQL_PASSWORD: ${{ secrets.PROD_MYSQL_PASSWORD }}
+          MYSQL_TABLE: ${{ secrets.PROD_MYSQL_TABLE }}
+          MYSQL_USER: ${{ secrets.PROD_MYSQL_USER }}
+          MYSQL_HOST: ${{ secrets.PROD_MYSQL_HOST }}
+          VUE_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.VUE_APP_GOOGLE_MAPS_API_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
         run: python scripts/ec2/use_latest.py
       
