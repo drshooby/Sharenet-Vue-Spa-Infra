@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         run: pip install boto3
       
-      - name: Pull Latest
+      - name: Pull Latest and Run New Code
         env:
           INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
         run: python scripts/ec2/use_latest.py
