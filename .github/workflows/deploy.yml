@@ -21,7 +21,6 @@ jobs:
         run: pip install boto3
       
       - name: Pull Latest and Run New Code
-        working-directory: ./Sharenet-Vue-Spa-Infra
         env:
           MYSQL_DATABASE: ${{ secrets.PROD_MYSQL_DATABASE }}
           MYSQL_PASSWORD: ${{ secrets.PROD_MYSQL_PASSWORD }}
@@ -33,5 +32,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
-        run: python scripts/ec2/use_latest.py
+        run: python ../scripts/ec2/use_latest.py
       
