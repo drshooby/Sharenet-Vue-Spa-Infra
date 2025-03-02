@@ -34,6 +34,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-          INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
+          INSTANCE_ID: ${{ secrets.INSTANCE_ID }}
+          API_URL: ${{ secrets.API_URL }}
+          ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
         run: python scripts/ec2/use_latest.py
       
