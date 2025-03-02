@@ -61,8 +61,8 @@ try:
         f"-e VUE_APP_GOOGLE_MAPS_API_KEY={VUE_APP_GOOGLE_MAPS_API_KEY} "
         f"{ECR_REPO_FRONTEND}",
 
-        # Check running containers
-        "docker ps -a"
+        # Cleanup
+        "docker image prune -a -f",
     ]
 
     waiter = ssm_client.get_waiter('command_executed')
@@ -85,7 +85,6 @@ try:
         CommandId=command_id,
         InstanceId=INSTANCE_ID,
     )
-    print(output)
 
     print(f"Deployment initiated! 💎")
 
