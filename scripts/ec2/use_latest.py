@@ -65,6 +65,8 @@ try:
         "docker ps -a"
     ]
 
+    waiter = ssm_client.get_waiter('command_executed')
+
     response = ssm_client.send_command(
         InstanceIds=[INSTANCE_ID],
         DocumentName="AWS-RunShellScript",
@@ -72,6 +74,12 @@ try:
     )
 
     command_id = response['Command']['CommandId']
+
+    waiter.wait(
+        CommandId=command_id,
+        InstanceIds=[INSTANCE_ID]
+    )
+
     output = ssm_client.get_command_invocation(
         CommandId=command_id,
         InstanceId=INSTANCE_ID,
