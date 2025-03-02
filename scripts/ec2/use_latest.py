@@ -77,7 +77,7 @@ try:
 
     waiter.wait(
         CommandId=command_id,
-        InstanceIds=[INSTANCE_ID]
+        InstanceId=INSTANCE_ID
     )
 
     output = ssm_client.get_command_invocation(
