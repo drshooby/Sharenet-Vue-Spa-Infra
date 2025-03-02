@@ -31,7 +31,6 @@ try:
     MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
     MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
     MYSQL_TABLE = os.environ["MYSQL_TABLE"]
-    BACK_PORT = os.environ["BACK_PORT"]
 
     # Frontend var
     VUE_APP_GOOGLE_MAPS_API_KEY = os.environ["VUE_APP_GOOGLE_MAPS_API_KEY"]
@@ -50,7 +49,7 @@ try:
         # Bring up new backend
         f"docker run -d --name backend -p 5000:5000 "
         f"-e MYSQL_HOST={MYSQL_HOST} -e MYSQL_USER={MYSQL_USER} -e MYSQL_PASSWORD={MYSQL_PASSWORD} "
-        f"-e MYSQL_DATABASE={MYSQL_DATABASE} -e MYSQL_TABLE={MYSQL_TABLE} -e BACK_PORT={BACK_PORT} "
+        f"-e MYSQL_DATABASE={MYSQL_DATABASE} -e MYSQL_TABLE={MYSQL_TABLE} -e "
         f"{ECR_REPO_BACKEND}",
 
         # Bring up new frontend
