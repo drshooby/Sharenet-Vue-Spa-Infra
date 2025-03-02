@@ -6,6 +6,7 @@ on:
     workflows: ["Smoke Tests and ECR Upload"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   pull_from_ecr:
