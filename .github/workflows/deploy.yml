@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-24.04
     
     steps:
+      - name: Checkout Infra Code
+        uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -32,7 +35,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           INSTANCE_ID: ${{ secrets.INSTANCE_ID }}          
-        run: |
-          cd ..
-          python scripts/ec2/use_latest.py
+        run: python scripts/ec2/use_latest.py
       
