@@ -1,4 +1,4 @@
-name: Deploy Latest
+name: Nightly Deployment From ECR Latest
 
 on:
   # schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pull_from_ecr:
+  deploy:
     runs-on: ubuntu-24.04
     
     steps:
