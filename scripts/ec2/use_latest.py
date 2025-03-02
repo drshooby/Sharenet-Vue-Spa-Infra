@@ -40,25 +40,26 @@ try:
     commands = [
         f"aws ecr get-login-password --region {AWS_REGION} | docker login --username AWS --password-stdin {AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com",
 
-        # Pull the latest
+        # Pull the latest images
         f"docker pull {ECR_REPO_BACKEND}",
         f"docker pull {ECR_REPO_FRONTEND}",
 
-        # Kill old
+        # Kill old containers (if they exist)
         "docker stop frontend backend || true",
         "docker rm -f frontend backend || true",
 
-        # Bring up new backend
+        # Bring up new backend container
         f"docker run -d --name backend -p 5000:5000 "
         f"-e MYSQL_HOST={MYSQL_HOST} -e MYSQL_USER={MYSQL_USER} -e MYSQL_PASSWORD={MYSQL_PASSWORD} "
-        f"-e MYSQL_DATABASE={MYSQL_DATABASE} -e MYSQL_TABLE={MYSQL_TABLE} -e "
+        f"-e MYSQL_DATABASE={MYSQL_DATABASE} -e MYSQL_TABLE={MYSQL_TABLE} "
         f"{ECR_REPO_BACKEND}",
 
-        # Bring up new frontend
+        # Bring up new frontend container
         f"docker run -d --name frontend -p 8080:8080 "
         f"-e VUE_APP_GOOGLE_MAPS_API_KEY={VUE_APP_GOOGLE_MAPS_API_KEY} "
         f"{ECR_REPO_FRONTEND}",
 
+        # Check running containers
         "docker ps -a"
     ]
 
