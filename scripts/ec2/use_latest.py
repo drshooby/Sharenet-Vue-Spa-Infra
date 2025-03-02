@@ -37,6 +37,8 @@ try:
     # Frontend var
     VUE_APP_GOOGLE_MAPS_API_KEY = os.environ["VUE_APP_GOOGLE_MAPS_API_KEY"]
 
+    INSTANCE_ID = os.environ["INSTANCE_ID"]
+
     commands = [
         f"aws ecr get-login-password --region {AWS_REGION} | docker login --username AWS --password-stdin {AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com",
 
@@ -64,12 +66,18 @@ try:
     ]
 
     response = ssm_client.send_command(
-        InstanceIds=[os.environ["INSTANCE_ID"]],
+        InstanceIds=[INSTANCE_ID],
         DocumentName="AWS-RunShellScript",
         Parameters={"commands": commands},
     )
 
-    print(response)
+    command_id = response['Command']['CommandId']
+    output = ssm_client.get_command_invocation(
+        CommandId=command_id,
+        InstanceId=INSTANCE_ID,
+    )
+    print(output)
+
     print(f"Deployment initiated! 💎")
 
 except KeyError as e:
