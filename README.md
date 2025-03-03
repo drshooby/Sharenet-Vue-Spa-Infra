@@ -16,4 +16,4 @@ Sharenet Vue SPA is a responsive single-page application built with Vue.js. The 
 - A temporary **EC2** instance is spun up to perform basic smoke tests to ensure functionality and cloud compatibility.
 - Upon success, the newest iteration of the code is built (frontend and backend images), tagged with **nightly + timestamp** and **latest**, then pushed to an **ECR** registry.
 - Every day at 12am PST, the latest images of the frontend and backend are pulled and started up on another **EC2** instance with nginx for routing.
-- The application interaction data is stored via an **RDS** MySQL instance.
+- The data is stored via an **RDS** MySQL instance.
