@@ -33,11 +33,11 @@ try:
     MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
     MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
     MYSQL_TABLE = os.environ["MYSQL_TABLE"]
-    API_URL = os.environ["API_URL"]
     ALLOWED_ORIGINS = os.environ["ALLOWED_ORIGINS"]
 
     # Frontend var
     VUE_APP_GOOGLE_MAPS_API_KEY = os.environ["VUE_APP_GOOGLE_MAPS_API_KEY"]
+    API_URL = os.environ["API_URL"]
 
     INSTANCE_ID = os.environ["INSTANCE_ID"]
 
