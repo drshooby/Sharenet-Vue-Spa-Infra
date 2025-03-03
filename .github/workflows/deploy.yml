@@ -34,5 +34,5 @@ jobs:
           INSTANCE_ID: ${{ secrets.INSTANCE_ID }}
           API_URL: ${{ secrets.API_URL }}
           ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
-        run: python scripts/ec2/use_latest.py
+        run: python scripts/ec2/deploy_latest.py
       
