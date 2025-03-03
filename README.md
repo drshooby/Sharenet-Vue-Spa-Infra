@@ -17,4 +17,4 @@ Sharenet Vue SPA is a responsive single-page application built with Vue.js. The 
 - Upon success, the newest iteration of the code is built (frontend and backend images), tagged with **nightly + timestamp** and **latest**, then pushed to an **ECR** registry.
 - Every day at 12am PST, the latest images of the frontend and backend are pulled and started up on another **EC2** instance with nginx for routing.
 - The data is stored via an **RDS** MySQL instance.
-- Additionally, AWS Route 53 handles network records that allow site usage.
+- Additionally, **Route 53** handles network records that allow site usage.
