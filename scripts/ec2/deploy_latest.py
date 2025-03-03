@@ -88,7 +88,7 @@ try:
         InstanceId=INSTANCE_ID,
     )
 
-    print(f"Deployment initiated! 💎")
+    print(f"Deployment ready! 💎")
 
 except KeyError as e:
     print(f"Missing environment variable: {e} 🔒")
