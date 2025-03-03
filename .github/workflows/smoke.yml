@@ -3,6 +3,7 @@ name: Smoke Tests and ECR Upload
 on:
   repository_dispatch:
     types: [dipatch]
+    
 jobs:
   smoke-tests:
     runs-on: ubuntu-24.04
