@@ -2,7 +2,7 @@ name: Smoke Tests and ECR Upload
 
 on:
   repository_dispatch:
-    types: [dipatch]
+    types: [deploy]
     
 jobs:
   smoke-tests:
